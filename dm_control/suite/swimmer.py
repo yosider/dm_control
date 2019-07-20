@@ -66,6 +66,21 @@ def swimmer15(time_limit=_DEFAULT_TIME_LIMIT, random=None,
                        environment_kwargs=environment_kwargs)
 
 
+@SUITE.add('benchmarking')
+def swimmer3(time_limit=_DEFAULT_TIME_LIMIT, random=None,
+              environment_kwargs=None):
+  """Returns a 3-link swimmer."""
+  return _make_swimmer(3, time_limit, random=random,
+                       environment_kwargs=environment_kwargs)
+
+# FIXME: ValueError: At least 3 bodies required. Received 2
+@SUITE.add('benchmarking')
+def swimmer2(time_limit=_DEFAULT_TIME_LIMIT, random=None,
+              environment_kwargs=None):
+  """Returns a 2-link swimmer."""
+  return _make_swimmer(2, time_limit, random=random,
+                       environment_kwargs=environment_kwargs)                       
+
 def swimmer(n_links=3, time_limit=_DEFAULT_TIME_LIMIT,
             random=None, environment_kwargs=None):
   """Returns a swimmer with n links."""
@@ -104,7 +119,7 @@ def _make_model(n_bodies):
     joint_range = '{} {}'.format(-joint_limit, joint_limit)
     child.append(etree.Element('joint', {'name': joint_name,
                                          'range': joint_range}))
-    motor_name = 'motor_{}'.format(body_index)
+    motor_name = 'motor_{}'.format(body_index) #FIXME!!!
     actuator.append(etree.Element('motor', name=motor_name, joint=joint_name))
     velocimeter_name = 'velocimeter_{}'.format(body_index)
     sensor.append(etree.Element('velocimeter', name=velocimeter_name,
