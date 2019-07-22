@@ -119,8 +119,10 @@ def _make_model(n_bodies):
     joint_range = '{} {}'.format(-joint_limit, joint_limit)
     child.append(etree.Element('joint', {'name': joint_name,
                                          'range': joint_range}))
-    motor_name = 'motor_{}'.format(body_index) #FIXME!!!
-    actuator.append(etree.Element('motor', name=motor_name, joint=joint_name))
+    #motor_name = 'motor_{}'.format(body_index)
+    position_name = 'position_{}'.format(body_index)
+    #actuator.append(etree.Element('motor', name=motor_name, joint=joint_name))
+    actuator.append(etree.Element('position', name=position_name, joint=joint_name))
     velocimeter_name = 'velocimeter_{}'.format(body_index)
     sensor.append(etree.Element('velocimeter', name=velocimeter_name,
                                 site=site_name))
@@ -223,8 +225,12 @@ class Swimmer(base.Task):
 
   def get_reward(self, physics):
     """Returns a smooth reward."""
+    """
     target_size = physics.named.model.geom_size['target', 0]
     return rewards.tolerance(physics.nose_to_target_dist(),
                              bounds=(0, target_size),
                              margin=5*target_size,
                              sigmoid='long_tail')
+    """
+    #return np.linalg.norm(physics.body_velocities()[:3])
+    return np.linalg.norm(physics.named.data.geom_xpos['nose'][:2])
