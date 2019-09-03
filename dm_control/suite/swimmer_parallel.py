@@ -33,8 +33,10 @@ from six.moves import range
 
 _DEFAULT_TIME_LIMIT = 30
 _CONTROL_TIMESTEP = .03  # (Seconds)
+REWARD_GAIN = 1
 
 SUITE = containers.TaggedTasks()
+REWARD_TH = np.cos(65 * np.pi/180)
 
 
 def get_model_and_assets(n_joints):
@@ -225,12 +227,11 @@ class Swimmer(base.Task):
 
   def get_reward(self, physics):
     """Returns a smooth reward."""
-    target_size = physics.named.model.geom_size['target', 0]
-    return rewards.tolerance(physics.nose_to_target_dist(),
-                             bounds=(0, target_size),
-                             margin=5*target_size,
-                             sigmoid='long_tail')
-    """
-    #return np.linalg.norm(physics.body_velocities()[:3])
-    return np.linalg.norm(physics.named.data.geom_xpos['nose'][:2])
-    """
+    xpos = physics.named.data.geom_xpos
+    tail_to_neck = xpos['visual_0'] - xpos['visual_1']
+    tail_to_target = xpos['target'] - xpos['visual_1']
+    cos = np.dot(tail_to_neck, tail_to_target) / np.linalg.norm(tail_to_neck) / np.linalg.norm(tail_to_target)
+    if abs(cos) > REWARD_TH:
+        return REWARD_GAIN * abs(cos)
+    else:
+        return -REWARD_GAIN

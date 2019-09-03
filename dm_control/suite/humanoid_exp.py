@@ -209,3 +209,7 @@ class Humanoid(base.Task):
                                sigmoid='linear')
       move = (5*move + 1) / 6
       return small_control * stand_reward * move
+
+
+  #def get_reward(self, physics):
+  #  return np.linalg.norm(physics.named.data.geom_xpos['torso'][:2])

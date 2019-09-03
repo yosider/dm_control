@@ -209,16 +209,3 @@ class Humanoid(base.Task):
                                sigmoid='linear')
       move = (5*move + 1) / 6
       return small_control * stand_reward * move
-
-"""
-  def get_reward(self, physics):
-    standing = rewards.tolerance(physics.head_height(),
-                                 bounds=(_STAND_HEIGHT, float('inf')),
-                                 margin=_STAND_HEIGHT/4)
-    x_velocity = physics.center_of_mass_velocity()[0]
-    move = rewards.tolerance(x_velocity,
-                               bounds=(self._move_speed, float('inf')),
-                               margin=self._move_speed, value_at_margin=0,
-                               sigmoid='linear')
-    return standing
-"""

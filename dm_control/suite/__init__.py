@@ -33,7 +33,7 @@ from dm_control.suite import finger
 from dm_control.suite import fish
 from dm_control.suite import hopper
 from dm_control.suite import humanoid
-#from dm_control.suite import humanoid_experiment
+from dm_control.suite import humanoid_exp
 from dm_control.suite import humanoid_CMU
 from dm_control.suite import lqr
 from dm_control.suite import manipulator
@@ -43,6 +43,7 @@ from dm_control.suite import quadruped
 from dm_control.suite import reacher
 from dm_control.suite import stacker
 from dm_control.suite import swimmer
+from dm_control.suite import swimmer_parallel
 from dm_control.suite import walker
 
 # Find all domains imported.
