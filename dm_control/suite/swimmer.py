@@ -209,7 +209,11 @@ class Swimmer(base.Task):
     target_box = .3 if close_target else 2
     xpos, ypos = self.random.uniform(-target_box, target_box, size=2)
     physics.named.model.geom_pos['target', 'x'] = xpos
+    #physics.named.model.body_pos['target_body', 'x'] = xpos
+    #physics.named.data.geom_xpos['target', 'x'] = xpos
     physics.named.model.geom_pos['target', 'y'] = ypos
+    #physics.named.model.body_pos['target_body', 'y'] = ypos
+    #physics.named.data.geom_xpos['target', 'y'] = ypos
     physics.named.model.light_pos['target_light', 'x'] = xpos
     physics.named.model.light_pos['target_light', 'y'] = ypos
 
