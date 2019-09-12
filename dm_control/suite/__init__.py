@@ -44,7 +44,7 @@ from dm_control.suite import reacher
 from dm_control.suite import stacker
 from dm_control.suite import swimmer
 from dm_control.suite import swimmer_mp
-from dm_control.suite import swimmer_parallel
+from dm_control.suite import swimmer_parallel_original
 from dm_control.suite import swimmer_parallel_mp
 from dm_control.suite import walker
 

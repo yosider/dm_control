@@ -106,7 +106,7 @@ def _make_model(n_bodies):
   """Generates an xml string defining a swimmer with `n_bodies` bodies."""
   if n_bodies < 3:
     raise ValueError('At least 3 bodies required. Received {}'.format(n_bodies))
-  mjcf = etree.fromstring(common.read_model('swimmer.xml'))
+  mjcf = etree.fromstring(common.read_model('swimmer_original.xml'))
   head_body = mjcf.find('./worldbody/body')
   actuator = etree.SubElement(mjcf, 'actuator')
   sensor = etree.SubElement(mjcf, 'sensor')
@@ -181,6 +181,18 @@ class Physics(mujoco.Physics):
     """Returns all internal joint angles (excluding root joints)."""
     return self.data.qpos[3:].copy()
 
+  def angle_to_target(self):
+    """user added: angle between (tail to neck vector) and (tail to target vector)"""
+    xpos = self.named.data.geom_xpos
+    tail_to_neck = xpos['visual_0'] - xpos['visual_1']
+    tail_to_target = xpos['target'] - xpos['visual_1']
+    cos = np.dot(tail_to_neck, tail_to_target) / np.linalg.norm(tail_to_neck) / np.linalg.norm(tail_to_target)
+    angle = np.arccos(cos) * np.sign(np.cross(tail_to_target[:2], tail_to_neck[:2]))
+    angle /= np.pi  # [-1, 1]
+    self.angle = angle
+    self.cos = cos
+    return angle
+
 
 class Swimmer(base.Task):
   """A swimmer `Task` to reach the target or just swim."""
@@ -223,15 +235,12 @@ class Swimmer(base.Task):
     obs['joints'] = physics.joints()
     obs['to_target'] = physics.nose_to_target()
     obs['body_velocities'] = physics.body_velocities()
+    obs['angle_to_target'] = physics.angle_to_target()
     return obs
 
   def get_reward(self, physics):
     """Returns a smooth reward."""
-    xpos = physics.named.data.geom_xpos
-    tail_to_neck = xpos['visual_0'] - xpos['visual_1']
-    tail_to_target = xpos['target'] - xpos['visual_1']
-    cos = np.dot(tail_to_neck, tail_to_target) / np.linalg.norm(tail_to_neck) / np.linalg.norm(tail_to_target)
-    if abs(cos) > REWARD_TH:
-        return REWARD_GAIN * abs(cos)
+    if abs(physics.cos) > REWARD_TH:
+        return REWARD_GAIN * abs(physics.cos)
     else:
         return -REWARD_GAIN

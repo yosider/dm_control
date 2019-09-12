@@ -3,9 +3,10 @@
   <include file="./common/skybox.xml"/>
   <include file="./common/materials.xml"/>
 
-  <option timestep="0.002" density="3000">
+  <!-- <option timestep="0.002" density="3000"> -->
+  <option timestep="0.002" density="3000"> <!--"1.3"-->
     <!-- <flag contact="disable"/> -->
-    <flag contact="enable"/>
+    <flag contact="enable" frictionloss="disable"/>
   </option>
 
   <default>
@@ -47,7 +48,7 @@
       <!-- <geom name="target" type="sphere" pos="1 1 .05" size=".1" material="target"/>-->
       <geom name="target" type="sphere" pos=".3 .3 .1" size=".1" material="target" density="1" friction="0 0 0"/>  <!--density, friction-->
       <light name="target_light" diffuse="1 1 1" pos=".3 .3 .1"/>
-      <joint name="target_rootx" class="free" type="slide" axis="1 0 0" pos="0 -.05 0"/>
+      <joint name="target_rootx" class="free" type="slide" axis="1 0 0" pos="0 -.05 0"/>  <!-- obs 2:4 -->
       <joint name="target_rooty" class="free" type="slide" axis="0 1 0" pos="0 -.05 0"/>
     </body>
   </worldbody>
